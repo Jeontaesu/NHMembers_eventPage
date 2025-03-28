@@ -1,0 +1,234 @@
+﻿<!DOCTYPE HTML>
+<html lang="ko-KR">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" type="text/css" href="style.css" />
+	<style></style>
+</head>
+
+<body>
+	<div id="wrap">
+		<div class="title-wrap">
+			<img class="title1" src="./img/title1.png" alt="NH포인트 함께하는">
+			<img class="title2" src="./img/title2.png" alt="나만의 축하송 이야기!">
+		</div>
+		<img class="bg" src="./img/bg.png" alt="">
+		<h2>소중한분들에 추억을 선물하세요</h2>
+		<div class="form-wrap">
+			<form>
+				<div class="form-input selectBox">
+					<label>카테고리</label>
+					<select>
+						<option>선택하세요</option>
+						<option>생일</option>
+						<option>결혼</option>
+						<option>기념일</option>
+						<option>기타</option>
+					</select>
+				</div>
+
+				<div class="form-input">
+					<label style="width:18rem;">받으실 분 이름</label>
+					<input type="text">
+				</div>
+
+				<div class="form-input textarea-container">
+					<label>축하 문구</label>
+					<div class="textarea-wrap">
+						<textarea maxlength="200"></textarea>
+						<span class="limit">200자 이내</span>
+					</div>
+				</div>
+
+				<div class="form-input radio">
+					<label>가수 목소리</label>
+					<div class="radio-group">
+						<label>
+							<input type="radio" name="gender" value="male">
+							남
+						</label>
+						<label>
+							<input type="radio" name="gender" value="female" checked>
+							여
+						</label>
+					</div>
+				</div>
+
+				<div class="form-input selectBox">
+					<label>음악 분위기</label>
+					<select>
+						<option>선택하세요</option>
+						<option>밝은</option>
+						<option>경쾌</option>
+						<option>차분</option>
+						<option>경건</option>
+					</select>
+				</div>
+
+				<div class="form-button">
+					<button type="submit">
+						축하송 만들기
+					</button>
+				</div>
+			</form>
+
+		</div>
+		<div class="tv-wrap" style="display:none;">
+			<!-- <h2>소중한분들에 추억을 선물하세요</h2> -->
+			<img src="./img/tv.png" alt="tv">
+			<div class="video-area">
+				<video id="videoPlayer" src="img/262215_tiny.mp4" muted></video>
+			</div>
+			<audio id="audioPlayer" src="./img/winner-day-187398.mp3"></audio>
+		</div>
+	</div>
+
+
+	<script>
+		document.addEventListener("DOMContentLoaded", () => {
+			// select Box 커스텀 스크립트
+			document.querySelectorAll(".form-wrap .form-input.selectBox").forEach(selectWrapper => {
+				const selectElement = selectWrapper.querySelector("select");
+				const customSelect = document.createElement("div");
+				customSelect.className = "custom-select";
+
+				// 선택된 옵션 표시 영역
+				const selectedOption = document.createElement("div");
+				selectedOption.className = "selected-option";
+				selectedOption.textContent = selectElement.options[selectElement.selectedIndex].text;
+				selectedOption.setAttribute("tabindex", "0");
+
+				// 옵션 목록 컨테이너
+				const optionsContainer = document.createElement("div");
+				optionsContainer.className = "options-container";
+
+				// 옵션 생성 및 이벤트 리스너 추가
+				Array.from(selectElement.options).forEach((option, index) => {
+					const customOption = document.createElement("div");
+					customOption.className = "custom-option";
+					customOption.textContent = option.text;
+					customOption.dataset.value = option.value;
+					customOption.setAttribute("tabindex", "0");
+
+					customOption.addEventListener("click", () => {
+						selectElement.selectedIndex = index;
+						selectedOption.textContent = option.text;
+						customSelect.classList.remove("open");
+						selectElement.dispatchEvent(new Event("change", { bubbles: true }));
+						selectedOption.focus();
+					});
+
+					optionsContainer.appendChild(customOption);
+				});
+
+
+				selectElement.style.display = "none";
+				customSelect.append(selectedOption, optionsContainer);
+				selectWrapper.appendChild(customSelect);
+
+				// **드롭다운 토글 (클릭)**
+				selectedOption.addEventListener("click", e => {
+					e.stopPropagation();
+					customSelect.classList.toggle("open");
+				});
+
+
+				selectedOption.addEventListener("keydown", e => {
+					if (e.key === "Enter" || e.key === " ") {
+						e.preventDefault(); // Space 키가 페이지 스크롤 방지
+						customSelect.classList.toggle("open");
+					} else if (e.key === "ArrowDown") {
+						e.preventDefault();
+						optionsContainer.querySelector(".custom-option")?.focus();
+					}
+				});
+
+				// 옵션 목록에서 키보드 네비게이션 지원
+				optionsContainer.addEventListener("keydown", e => {
+					const options = [...optionsContainer.querySelectorAll(".custom-option")];
+					let currentIndex = options.indexOf(document.activeElement);
+
+					if (e.key === "ArrowDown" && currentIndex < options.length - 1) {
+						e.preventDefault();
+						options[currentIndex + 1].focus();
+					} else if (e.key === "ArrowUp" && currentIndex > 0) {
+						e.preventDefault();
+						options[currentIndex - 1].focus();
+					} else if (e.key === "Enter" || e.key === " ") {
+						e.preventDefault();
+						options[currentIndex]?.click();
+					} else if (e.key === "Escape") {
+						customSelect.classList.remove("open");
+						selectedOption.focus();
+					}
+				});
+
+				// **외부 클릭 시 드롭다운 닫기**
+				document.addEventListener("click", () => customSelect.classList.remove("open"));
+
+				// **Tab 키로 다른 곳 이동하면 드롭다운 닫기**
+				selectedOption.addEventListener("blur", () => {
+					setTimeout(() => {
+						if (!customSelect.contains(document.activeElement)) {
+							customSelect.classList.remove("open");
+						}
+					}, 100);
+				});
+
+				optionsContainer.addEventListener("blur", () => {
+					setTimeout(() => {
+						if (!customSelect.contains(document.activeElement)) {
+							customSelect.classList.remove("open");
+						}
+					}, 100);
+				});
+			});
+
+
+			// 로딩화면 추가 및 TV 화면 전환
+			const form = document.querySelector(".form-wrap form");
+			const submitButton = document.querySelector(".form-button button");
+			const wrap = document.querySelector("#wrap");
+			const tvWrap = document.querySelector(".tv-wrap");
+			const videoPlayer = document.getElementById("videoPlayer");
+			const audioPlayer = document.getElementById("audioPlayer");
+
+			submitButton.addEventListener("click", (e) => {
+				e.preventDefault(); // 폼 기본 동작 방지
+
+				// 로딩 화면 추가
+				const loadingScreen = document.createElement("div");
+				loadingScreen.className = "loading-screen";
+				// loadingScreen.textContent = "로딩 중...";
+				loadingScreen.innerHTML = `
+					<div class="line"></div>
+        <div class="line"></div>
+        <div class="line"></div>
+				`;
+				wrap.appendChild(loadingScreen);
+
+				// 2초 후 화면 변경 및 비디오/오디오 재생
+				setTimeout(() => {
+					loadingScreen.remove(); // 로딩 화면 제거
+					document.querySelector(".form-wrap").style.display = "none"; // 폼 숨김
+					wrap.classList.add("tv-mode");
+					tvWrap.style.display = "block"; // TV 화면 표시
+
+					// **비디오 & 오디오 자동 재생**
+					videoPlayer.play().catch(error => {
+						console.warn("비디오 자동 재생이 차단됨:", error);
+					});
+
+					audioPlayer.play().catch(error => {
+						console.warn("오디오 자동 재생이 차단됨:", error);
+					});
+
+				}, 2000);
+			});
+		});
+	</script>
+</body>
+
+</html>
