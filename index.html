@@ -13,9 +13,10 @@
 		<div class="title-wrap">
 			<img class="title1" src="./img/title1.png" alt="NH포인트 함께하는">
 			<img class="title2" src="./img/title2.png" alt="나만의 축하송 이야기!">
+			<h2>소중한분들에 추억을 선물하세요</h2>
 		</div>
 		<img class="bg" src="./img/bg.png" alt="">
-		<h2>소중한분들에 추억을 선물하세요</h2>
+
 		<div class="form-wrap">
 			<form>
 				<div class="form-input selectBox">
@@ -79,9 +80,10 @@
 			<!-- <h2>소중한분들에 추억을 선물하세요</h2> -->
 			<img src="./img/tv.png" alt="tv">
 			<div class="video-area">
-				<video id="videoPlayer" src="img/262215_tiny.mp4" muted></video>
+				<!-- <video id="videoPlayer" src="img/262215_tiny.mp4" muted></video> -->
+				<img src="img/img_happy.jpeg" alt="">
 			</div>
-			<audio id="audioPlayer" src="./img/winner-day-187398.mp3"></audio>
+			<audio id="audioPlayer" src="./img/music_happy.mp3"></audio>
 		</div>
 	</div>
 
@@ -192,7 +194,7 @@
 			const submitButton = document.querySelector(".form-button button");
 			const wrap = document.querySelector("#wrap");
 			const tvWrap = document.querySelector(".tv-wrap");
-			const videoPlayer = document.getElementById("videoPlayer");
+			// const videoPlayer = document.getElementById("videoPlayer");
 			const audioPlayer = document.getElementById("audioPlayer");
 
 			submitButton.addEventListener("click", (e) => {
@@ -217,9 +219,9 @@
 					tvWrap.style.display = "block"; // TV 화면 표시
 
 					// **비디오 & 오디오 자동 재생**
-					videoPlayer.play().catch(error => {
-						console.warn("비디오 자동 재생이 차단됨:", error);
-					});
+					// videoPlayer.play().catch(error => {
+					// 	console.warn("비디오 자동 재생이 차단됨:", error);
+					// });
 
 					audioPlayer.play().catch(error => {
 						console.warn("오디오 자동 재생이 차단됨:", error);
